@@ -1,0 +1,11 @@
+version: "3.9"
+
+# Local development overrides
+services:
+  backend:
+    ports:
+      - "8000:8000"   # expose backend directly for mobile dev
+
+  nginx:
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro   # HTTP-only in dev; production uses nginx.conf with HTTPS
