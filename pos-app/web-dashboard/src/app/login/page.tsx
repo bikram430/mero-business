@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authApi } from '@/lib/api';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const [phone, setPhone] = useState('');
@@ -139,6 +139,14 @@ export default function LoginPage() {
         input:focus { outline: none !important; border-color: #2563EB !important; background: rgba(37,99,235,0.06) !important; }
       `}</style>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
 

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { customerApi } from '@/lib/api';
 import { Logo } from '@/components/MerchantShell';
@@ -29,7 +29,7 @@ function IcCheck() {
   );
 }
 
-export default function CustomerLoginPage() {
+function CustomerLoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const [phone, setPhone] = useState('');
@@ -121,6 +121,14 @@ export default function CustomerLoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function CustomerLoginPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>}>
+      <CustomerLoginForm />
+    </Suspense>
   );
 }
 
