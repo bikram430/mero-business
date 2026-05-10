@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import { Logo } from '@/components/MerchantShell';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
@@ -244,7 +243,7 @@ export default function StoreDetailPage() {
       {/* Header */}
       <div style={s.header}>
         <div style={s.headerInner}>
-          <a href="/shop" style={s.headerLogo}><Logo size={28} /></a>
+          <a href="/shop" style={s.headerLogo}><img src="/mero-business-logo.svg" alt="Mero Business" style={{ height: 26, width: 'auto' }} /></a>
           <button style={s.backBtn} onClick={() => router.push('/shop')}>
             <IcArrowLeft /> Back to Stores
           </button>
@@ -519,8 +518,7 @@ export default function StoreDetailPage() {
 
       {/* Footer */}
       <footer style={s.footer}>
-        <Logo size={22} />
-        <span style={s.footerText}>Mero Business — Nepal&apos;s Smart POS Platform</span>
+        <img src="/mero-business-logo.svg" alt="Mero Business" style={{ height: 22, width: 'auto' }} />
       </footer>
     </div>
   );

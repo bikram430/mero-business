@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
-import { Logo } from '@/components/MerchantShell';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
@@ -111,36 +110,43 @@ export default function ShopPage() {
         .sc { transition: transform 0.18s, box-shadow 0.18s; }
         input::placeholder { color: #94A3B8; }
         input:focus { outline: none; }
+        .shop-nav-label { display: inline; }
+        @media (max-width: 640px) {
+          .shop-search { display: none !important; }
+          .shop-nav-label { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .shop-near-text { display: none !important; }
+        }
       `}</style>
 
       {/* ── Header ── */}
       <header style={{ background: '#fff', borderBottom: '1px solid #E2E8F0', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px', height: 62, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0, marginRight: 8 }}>
-            <Logo size={30} />
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#0F172A', letterSpacing: -0.3, lineHeight: 1.1 }}>Mero Business</div>
-              <div style={{ fontSize: 9, color: '#94A3B8', letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: 600 }}>Discover Stores</div>
-            </div>
+        <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 16px', height: 58, display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Brand logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+            <img src="/mero-business-logo.svg" alt="Mero Business" style={{ height: 32, width: 'auto' }} />
           </Link>
 
-          {/* Search */}
-          <div style={{ flex: 1, position: 'relative', maxWidth: 480 }}>
-            <span style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', color: '#94A3B8', pointerEvents: 'none', display: 'flex' }}><IcSearch /></span>
+          {/* Search — hidden on mobile */}
+          <div className="shop-search" style={{ flex: 1, position: 'relative', maxWidth: 440, marginLeft: 8 }}>
+            <span style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#94A3B8', pointerEvents: 'none', display: 'flex' }}><IcSearch /></span>
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search stores or areas..."
-              style={{ width: '100%', padding: '9px 14px 9px 38px', borderRadius: 10, border: '1.5px solid #E2E8F0', background: '#F8FAFC', color: '#0F172A', fontSize: 14, boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '8px 12px 8px 34px', borderRadius: 9, border: '1.5px solid #E2E8F0', background: '#F8FAFC', color: '#0F172A', fontSize: 14, boxSizing: 'border-box' }}
             />
           </div>
+
+          <div style={{ flex: 1 }} />
 
           {/* Near Me */}
           <button
             onClick={locStatus === 'ok' ? undefined : requestLocation}
             style={{
-              display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0,
-              padding: '8px 16px', borderRadius: 10, cursor: locStatus === 'ok' ? 'default' : 'pointer',
+              display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0,
+              padding: '7px 13px', borderRadius: 9, cursor: locStatus === 'ok' ? 'default' : 'pointer',
               background: locStatus === 'ok' ? '#F0FDF4' : '#EFF6FF',
               border: `1.5px solid ${locStatus === 'ok' ? '#BBF7D0' : '#BFDBFE'}`,
               color: locStatus === 'ok' ? '#16A34A' : '#2563EB',
@@ -152,15 +158,33 @@ export default function ShopPage() {
             ) : (
               <span style={{ display: 'flex' }}><IcLocate /></span>
             )}
-            {locStatus === 'ok' ? 'By distance' : locStatus === 'loading' ? 'Locating...' : 'Near Me'}
+            <span className="shop-near-text">{locStatus === 'ok' ? 'Nearby' : locStatus === 'loading' ? '...' : 'Near Me'}</span>
           </button>
 
-          {/* Customer Login */}
-          <Link href="/customer/login" style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#475569', fontSize: 13, textDecoration: 'none', padding: '8px 16px', borderRadius: 10, border: '1.5px solid #E2E8F0', fontWeight: 600, flexShrink: 0, background: '#fff' }}>
+          {/* Sign In */}
+          <Link href="/customer/login" style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#475569', fontSize: 13, textDecoration: 'none', padding: '7px 13px', borderRadius: 9, border: '1.5px solid #E2E8F0', fontWeight: 600, flexShrink: 0, background: '#fff' }}>
             <IcUser />
-            Sign In
+            <span className="shop-nav-label">Sign In</span>
           </Link>
         </div>
+
+        {/* Mobile search bar — visible only on small screens */}
+        <div style={{ display: 'none' }} className="shop-mobile-search">
+          <div style={{ padding: '0 16px 10px', position: 'relative' }}>
+            <span style={{ position: 'absolute', left: 27, top: '50%', transform: 'translateY(-50%)', color: '#94A3B8', pointerEvents: 'none', display: 'flex' }}><IcSearch /></span>
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search stores..."
+              style={{ width: '100%', padding: '9px 12px 9px 34px', borderRadius: 9, border: '1.5px solid #E2E8F0', background: '#F8FAFC', color: '#0F172A', fontSize: 14, boxSizing: 'border-box' }}
+            />
+          </div>
+        </div>
+        <style>{`
+          @media (max-width: 640px) {
+            .shop-mobile-search { display: block !important; }
+          }
+        `}</style>
       </header>
 
       {/* ── Hero ── */}
@@ -263,19 +287,13 @@ export default function ShopPage() {
       </div>
 
       {/* ── Footer ── */}
-      <footer style={{ background: '#fff', borderTop: '1px solid #E2E8F0', padding: '28px 24px' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Logo size={22} />
-            <span style={{ fontSize: 13, color: '#475569', fontWeight: 600 }}>Mero Business</span>
-            <span style={{ color: '#CBD5E1', fontSize: 13 }}>·</span>
-            <span style={{ fontSize: 12, color: '#94A3B8' }}>Nepal's Digital POS &amp; Receipt Platform</span>
-          </div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            <Link href="/customer/login" style={{ fontSize: 13, color: '#475569', textDecoration: 'none', fontWeight: 500 }}>Sign In</Link>
-            <Link href="/customer/register" style={{ fontSize: 13, color: '#475569', textDecoration: 'none', fontWeight: 500 }}>Create Account</Link>
-            <Link href="/login" style={{ fontSize: 13, color: '#475569', textDecoration: 'none', fontWeight: 500 }}>Merchant Login</Link>
-            <Link href="/register" style={{ fontSize: 13, color: '#2563EB', textDecoration: 'none', fontWeight: 600 }}>Register Store</Link>
+      <footer style={{ background: '#fff', borderTop: '1px solid #E2E8F0', padding: '16px 24px' }}>
+        <div style={{ maxWidth: 1140, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+          <img src="/mero-business-logo.svg" alt="Mero Business" style={{ height: 24, width: 'auto' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span style={{ fontSize: 12, color: '#CBD5E1' }}>©2025</span>
+            <Link href="/register" style={{ fontSize: 13, color: '#2563EB', textDecoration: 'none', fontWeight: 600 }}>Register your store</Link>
+            <Link href="/login" style={{ fontSize: 13, color: '#94A3B8', textDecoration: 'none' }}>Merchant login</Link>
           </div>
         </div>
       </footer>
