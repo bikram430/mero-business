@@ -224,7 +224,7 @@ export default function StoreDetailPage() {
   if (loading) {
     return (
       <div style={s.loadWrap}>
-        <Logo size={40} />
+        <img src="/mero-business-logo.svg" alt="Mero Business" style={{ height: 36, width: 'auto' }} />
         <p style={{ color: '#6B7280', marginTop: 16 }}>Loading store...</p>
       </div>
     );
